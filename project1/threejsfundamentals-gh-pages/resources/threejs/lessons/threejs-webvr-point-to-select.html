@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from threejs/lessons/threejs-webvr-point-to-select.md. Do not edited directly -->
+<!--
+Copyright 2018, Google Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+*   Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+*   Redistributions in binary form must reproduce the above
+    copyright notice, this list of conditions and the following disclaimer
+    in the documentation and/or other materials provided with the
+    distribution.
+
+*   Neither the name of Google Inc. nor the names of their
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="How to implement 3DOF Point to Select.">
+<meta name="keywords" content="webgl graphics three.js">
+<meta name="thumbnail" content="https://threejsfundamentals.org/threejs/lessons/screenshots/threejs-webvr-point-to-select_en.jpg">
+
+<meta property="og:title" content="Three.js VR - 3DOF Point to Select">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://threejsfundamentals.org/threejs/lessons/screenshots/threejs-webvr-point-to-select_en.jpg">
+<meta property="og:description" content="How to implement 3DOF Point to Select.">
+<meta property="og:url" content="https://threejsfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@greggman">
+<meta name="twitter:creator" content="@greggman">
+<meta name="twitter:domain" content="threejsfundamentals.org">
+<meta name="twitter:title" content="Three.js VR - 3DOF Point to Select">
+<meta name="twitter:url" content="https://threejsfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html">
+<meta name="twitter:description" content="How to implement 3DOF Point to Select.">
+<meta name="twitter:image:src" content="https://threejsfundamentals.org/threejs/lessons/screenshots/threejs-webvr-point-to-select_en.jpg">
+
+  <link rel="alternate" hreflang="en" href="https://webglfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html">
+  <link rel="alternate" hreflang="fr" href="https://webglfundamentals.org/threejs/lessons/fr/threejs-webvr-point-to-select.html">
+  <link rel="alternate" hreflang="ja" href="https://webglfundamentals.org/threejs/lessons/ja/threejs-webvr-point-to-select.html">
+  <link rel="alternate" hreflang="kr" href="https://webglfundamentals.org/threejs/lessons/kr/threejs-webvr-point-to-select.html">
+  <link rel="alternate" hreflang="ru" href="https://webglfundamentals.org/threejs/lessons/ru/threejs-webvr-point-to-select.html">
+  <link rel="alternate" hreflang="zh_cn" href="https://webglfundamentals.org/threejs/lessons/zh_cn/threejs-webvr-point-to-select.html">
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://threejsfundamentals.org/#website",
+      "url":"https://threejsfundamentals.org/",
+      "name":"ThreejsFundamentals"
+    },
+    {
+      "@type":"ImageObject",
+      "@id":"https://threejsfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html#primaryimage",
+      "url":"https://threejsfundamentals.org/threejs/lessons/screenshots/threejs-webvr-point-to-select_en.jpg",
+      "width":1200,
+      "height":630
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://threejsfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html#webpage",
+      "url":"https://threejsfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html",
+      "inLanguage":"en",
+      "name":"Three.js VR - 3DOF Point to Select",
+      "keywords":"webgl graphics three.js programming",
+      "isPartOf":{
+        "@id":"https://threejsfundamentals.org/#website"
+      },
+      "primaryImageOfPage":{
+        "@id":"https://threejsfundamentals.org/threejs/lessons/threejs-webvr-point-to-select.html#primaryimage"
+      }
+    }
+  ]
+}
+</script>
+
+<title>Three.js VR - 3DOF Point to Select</title>
+<link href="/threejs/lessons/resources/threejsfundamentals-icon.png" rel="shortcut icon" type="image/png">
+<link rel="apple-touch-icon" href="/threejs/lessons/resources/threejsfundamentals-icon.png">
+<link rel="icon" href="/threejs/lessons/resources/threejsfundamentals-icon.png">
+
+<link rel="stylesheet" href="/threejs/lessons/lang.css">
+<link rel="stylesheet" href="/threejs/lessons/resources/lesson.css">
+</head>
+<body>
+<div class="threejs_navbar">
+  <div>
+    <select class="language">
+    <option value="/threejs/lessons/threejs-webvr-point-to-select.html" selected>English</a>
+    <option value="/threejs/lessons/fr/threejs-webvr-point-to-select.html" >Français</a>
+    <option value="/threejs/lessons/ja/threejs-webvr-point-to-select.html" >日本語</a>
+    <option value="/threejs/lessons/kr/threejs-webvr-point-to-select.html" >한국어</a>
+    <option value="/threejs/lessons/ru/threejs-webvr-point-to-select.html" >Русский</a>
+    <option value="/threejs/lessons/zh_cn/threejs-webvr-point-to-select.html" >中文</a>
+</select>
+
+
+    <a href="#toc">Table of Contents</a>
+  </div>
+</div>
+<div class="threejs_header">
+  <h1><a href="/">threejsfundamentals.org</a></h1>
+<style>
+#forkongithub a {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 2rem;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(150px) rotate(45deg) translate(10px,70px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+#forkongithub a:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub a::before,#forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+
+#forkongithub{
+    z-index: 9999;
+    /* needed for firefox */
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+}
+#forkongithub svg{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+@media (max-width: 900px) {
+    #forkongithub a{
+        line-height: 1.2rem;
+    }
+}
+@media (max-width: 700px) {
+  #forkongithub {
+    display: none;
+  }
+}
+@media (max-width: 410px) {
+    #forkongithub a{
+        font-size: 0.7rem;
+        transform: translateX(150px) rotate(45deg) translate(20px,40px);
+    }
+}
+
+</style>
+<div id="forkongithub"><a href="https://github.com/gfxfundamentals/threejsfundamentals">Fix, Fork, Contribute <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 136 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(3.92891,0,0,3.92891,67.867,129.125)">
+        <path d="M0,-31.904C-8.995,-31.904 -16.288,-24.611 -16.288,-15.614C-16.288,-8.417 -11.621,-2.312 -5.148,-0.157C-4.333,-0.008 -4.036,-0.511 -4.036,-0.943C-4.036,-1.329 -4.05,-2.354 -4.058,-3.713C-8.589,-2.729 -9.545,-5.897 -9.545,-5.897C-10.286,-7.779 -11.354,-8.28 -11.354,-8.28C-12.833,-9.29 -11.242,-9.27 -11.242,-9.27C-9.607,-9.155 -8.747,-7.591 -8.747,-7.591C-7.294,-5.102 -4.934,-5.821 -4.006,-6.238C-3.858,-7.29 -3.438,-8.008 -2.972,-8.415C-6.589,-8.826 -10.392,-10.224 -10.392,-16.466C-10.392,-18.244 -9.757,-19.698 -8.715,-20.837C-8.883,-21.249 -9.442,-22.905 -8.556,-25.148C-8.556,-25.148 -7.188,-25.586 -4.076,-23.478C-2.777,-23.84 -1.383,-24.02 0.002,-24.026C1.385,-24.02 2.779,-23.84 4.08,-23.478C7.19,-25.586 8.555,-25.148 8.555,-25.148C9.444,-22.905 8.885,-21.249 8.717,-20.837C9.761,-19.698 10.392,-18.244 10.392,-16.466C10.392,-10.208 6.583,-8.831 2.954,-8.428C3.539,-7.925 4.06,-6.931 4.06,-5.411C4.06,-3.234 4.04,-1.477 4.04,-0.943C4.04,-0.507 4.333,0 5.16,-0.159C11.628,-2.318 16.291,-8.419 16.291,-15.614C16.291,-24.611 8.997,-31.904 0,-31.904" style="fill:white;"/>
+    </g>
+</svg>
+</a></div>
+
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>Three.js VR - 3DOF Point to Select</h1>
+  </div>
+  <div class="lesson">
+    <div class="lesson-main">
+      <p><strong>NOTE: The examples on this page require a VR capable
+device with a pointing device. Without one they won&#39;t work. See <a href="threejs-webvr.html">this article</a>
+as to why</strong></p>
+<p>In the <a href="threejs-webvr-look-to-select.html">previous article</a> we went over
+a very simple VR example where we let the user choose things by
+pointing via looking. In this article we will take it one step further
+and let the user choose with a pointing device </p>
+<p>Three.js makes is relatively easy by providing 2 controller objects in VR
+and tries to handle both cases of a single 3DOF controller and two 6DOF
+controllers. Each of the controllers are <code class="notranslate" translate="no">Object3D</code> objects which give
+the orientation and position of that controller. They also provide 
+<code class="notranslate" translate="no">selectstart</code>, <code class="notranslate" translate="no">select</code> and <code class="notranslate" translate="no">selectend</code> events when the user starts pressing,
+is pressing, and stops pressing (ends) the &quot;main&quot; button on the controller.</p>
+<p>Starting with the last example from <a href="threejs-webvr-look-to-select.html">the previous article</a>
+let&#39;s change the <code class="notranslate" translate="no">PickHelper</code> into a <code class="notranslate" translate="no">ControllerPickHelper</code>.</p>
+<p>Our new implementation will emit a <code class="notranslate" translate="no">select</code> event that gives us the object that was picked
+so to use it we&#39;ll just need to do this.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const pickHelper = new ControllerPickHelper(scene);
+pickHelper.addEventListener(&#39;select&#39;, (event) =&gt; {
+  event.selectedObject.visible = false;
+  const partnerObject = meshToMeshMap.get(event.selectedObject);
+  partnerObject.visible = true;
+});
+</code></pre>
+<p>Remember from our previous code <code class="notranslate" translate="no">meshToMeshMap</code> maps our boxes and spheres to
+each other so if we have one we can look up its partner through <code class="notranslate" translate="no">meshToMeshMap</code> 
+so here we&#39;re just hiding the selected object and un-hiding its partner.</p>
+<p>As for the actual implementation of <code class="notranslate" translate="no">ControllerPickHelper</code>, first we need
+to add the VR controller objects to the scene and to those add some 3D lines
+we can use to display where the user is pointing. We save off both the controllers
+and the their lines.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">class ControllerPickHelper {
+  constructor(scene) {
+    const pointerGeometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 0, -1),
+    ]);
+
+    this.controllers = [];
+    for (let i = 0; i &lt; 2; ++i) {
+      const controller = renderer.xr.getController(i);
+      scene.add(controller);
+
+      const line = new THREE.Line(pointerGeometry);
+      line.scale.z = 5;
+      controller.add(line);
+      this.controllers.push({controller, line});
+    }
+  }
+}
+</code></pre>
+<p>Without doing anything else this alone would give us 1 or 2 lines in the scene
+showing where the user&#39;s pointing devices are and which way they are pointing.</p>
+<p>Next let&#39;s add some code to pick from the controllers. This is the first time
+we&#39;ve picked with something not the camera. In our <a href="threejs-picking.html">article on picking</a>
+the user uses the mouse or finger to pick which means picking comes from the camera
+into the screen. In <a href="threejs-webvr-look-to-select.html">the previous article</a> we 
+were picking based on which way the user is looking so again that comes from the
+camera. This time though we&#39;re picking from the position of the controllers so
+we&#39;re not using the camera.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">class ControllerPickHelper {
+  constructor(scene) {
++    this.raycaster = new THREE.Raycaster();
++    this.objectToColorMap = new Map();
++    this.controllerToObjectMap = new Map();
++    this.tempMatrix = new THREE.Matrix4();
+
+    const pointerGeometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 0, -1),
+    ]);
+
+    this.controllers = [];
+    for (let i = 0; i &lt; 2; ++i) {
+      const controller = renderer.xr.getController(i);
+      scene.add(controller);
+
+      const line = new THREE.Line(pointerGeometry);
+      line.scale.z = 5;
+      controller.add(line);
+      this.controllers.push({controller, line});
+    }
+  }
++  update(scene, time) {
++    this.reset();
++    for (const {controller, line} of this.controllers) {
++      // cast a ray through the from the controller
++      this.tempMatrix.identity().extractRotation(controller.matrixWorld);
++      this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
++      this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
++      // get the list of objects the ray intersected
++      const intersections = this.raycaster.intersectObjects(scene.children);
++      if (intersections.length) {
++        const intersection = intersections[0];
++        // make the line touch the object
++        line.scale.z = intersection.distance;
++        // pick the first object. It&#39;s the closest one
++        const pickedObject = intersection.object;
++        // save which object this controller picked
++        this.controllerToObjectMap.set(controller, pickedObject);
++        // highlight the object if we haven&#39;t already
++        if (this.objectToColorMap.get(pickedObject) === undefined) {
++          // save its color
++          this.objectToColorMap.set(pickedObject, pickedObject.material.emissive.getHex());
++          // set its emissive color to flashing red/yellow
++          pickedObject.material.emissive.setHex((time * 8) % 2 &gt; 1 ? 0xFF2000 : 0xFF0000);
++        }
++      } else {
++        line.scale.z = 5;
++      }
++    }
++  }
+}
+</code></pre>
+<p>Like before we use a <code class="notranslate" translate="no">Raycaster</code> but this time we take the ray from the controller.
+Our previous <code class="notranslate" translate="no">PickHelper</code> there was only one thing picking but here we have up to 2
+controllers, one for each hand. We save off which object each controller is
+looking at in <code class="notranslate" translate="no">controllerToObjectMap</code>. We also save off the original emissive color in
+<code class="notranslate" translate="no">objectToColorMap</code> and we make the line long enough to touch whatever it&#39;s pointing at.</p>
+<p>We need to add some code to reset these settings every frame.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">class ControllerPickHelper {
+
+  ...
+
++  _reset() {
++    // restore the colors
++    this.objectToColorMap.forEach((color, object) =&gt; {
++      object.material.emissive.setHex(color);
++    });
++    this.objectToColorMap.clear();
++    this.controllerToObjectMap.clear();
++  }
+  update(scene, time) {
++    this._reset();
+
+    ...
+
+}
+</code></pre>
+<p>Next we want to emit a <code class="notranslate" translate="no">select</code> event when the user clicks the controller.
+To do that we can extend three.js&#39;s <code class="notranslate" translate="no">EventDispatcher</code> and then we&#39;ll check
+when we get a <code class="notranslate" translate="no">select</code> event from the controller, then if that controller
+is pointing at something we emit what that controller is pointing at
+as our own <code class="notranslate" translate="no">select</code> event.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">-class ControllerPickHelper {
++class ControllerPickHelper extends THREE.EventDispatcher {
+  constructor(scene) {
++    super();
+    this.raycaster = new THREE.Raycaster();
+    this.objectToColorMap = new Map();  // object to save color and picked object
+    this.controllerToObjectMap = new Map();
+    this.tempMatrix = new THREE.Matrix4();
+
+    const pointerGeometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 0, -1),
+    ]);
+
+    this.controllers = [];
+    for (let i = 0; i &lt; 2; ++i) {
+      const controller = renderer.xr.getController(i);
++      controller.addEventListener(&#39;select&#39;, (event) =&gt; {
++        const controller = event.target;
++        const selectedObject = this.controllerToObjectMap.get(controller);
++        if (selectedObject) {
++          this.dispatchEvent({type: &#39;select&#39;, controller, selectedObject});
++        }
++      });
+      scene.add(controller);
+
+      const line = new THREE.Line(pointerGeometry);
+      line.scale.z = 5;
+      controller.add(line);
+      this.controllers.push({controller, line});
+    }
+  }
+}
+</code></pre>
+<p>All that is left is to call <code class="notranslate" translate="no">update</code> in our render loop</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">function render(time) {
+
+  ...
+
++  pickHelper.update(scene, time);
+
+  renderer.render(scene, camera);
+}
+</code></pre>
+<p>and assuming you have a VR device with a controller you should
+be able to use the controllers to pick things.</p>
+<p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs/resources/editor.html?url=/threejs/lessons/..%2Fthreejs-webvr-point-to-select.html"></iframe></div>
+  <a class="threejs_center" href="/threejs/lessons/../threejs-webvr-point-to-select.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>And what if we wanted to be able to move the objects?</p>
+<p>That&#39;s relatively easy. Let&#39;s move our controller &#39;select&#39; listener
+code out into a function so we can use it for more than one thing.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">class ControllerPickHelper extends THREE.EventDispatcher {
+  constructor(scene) {
+    super();
+
+    ...
+
+    this.controllers = [];
+
++    const selectListener = (event) =&gt; {
++      const controller = event.target;
++      const selectedObject = this.controllerToObjectMap.get(event.target);
++      if (selectedObject) {
++        this.dispatchEvent({type: &#39;select&#39;, controller, selectedObject});
++      }
++    };
+
+    for (let i = 0; i &lt; 2; ++i) {
+      const controller = renderer.xr.getController(i);
+-      controller.addEventListener(&#39;select&#39;, (event) =&gt; {
+-        const controller = event.target;
+-        const selectedObject = this.controllerToObjectMap.get(event.target);
+-        if (selectedObject) {
+-          this.dispatchEvent({type: &#39;select&#39;, controller, selectedObject});
+-        }
+-      });
++      controller.addEventListener(&#39;select&#39;, selectListener);
+
+       ...
+</code></pre>
+<p>Then let&#39;s use it for both <code class="notranslate" translate="no">selectstart</code> and <code class="notranslate" translate="no">select</code></p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">class ControllerPickHelper extends THREE.EventDispatcher {
+  constructor(scene) {
+    super();
+
+    ...
+
+    this.controllers = [];
+
+    const selectListener = (event) =&gt; {
+      const controller = event.target;
+      const selectedObject = this.controllerToObjectMap.get(event.target);
+      if (selectedObject) {
+-        this.dispatchEvent({type: &#39;select&#39;, controller, selectedObject});
++        this.dispatchEvent({type: event.type, controller, selectedObject});
+      }
+    };
+
+    for (let i = 0; i &lt; 2; ++i) {
+      const controller = renderer.xr.getController(i);
+      controller.addEventListener(&#39;select&#39;, selectListener);
+      controller.addEventListener(&#39;selectstart&#39;, selectListener);
+
+       ...
+</code></pre>
+<p>and let&#39;s also pass on the <code class="notranslate" translate="no">selectend</code> event which three.js sends out
+when you user lets of the button on the controller.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">class ControllerPickHelper extends THREE.EventDispatcher {
+  constructor(scene) {
+    super();
+
+    ...
+
+    this.controllers = [];
+
+    const selectListener = (event) =&gt; {
+      const controller = event.target;
+      const selectedObject = this.controllerToObjectMap.get(event.target);
+      if (selectedObject) {
+        this.dispatchEvent({type: event.type, controller, selectedObject});
+      }
+    };
+
++    const endListener = (event) =&gt; {
++      const controller = event.target;
++      this.dispatchEvent({type: event.type, controller});
++    };
+
+    for (let i = 0; i &lt; 2; ++i) {
+      const controller = renderer.xr.getController(i);
+      controller.addEventListener(&#39;select&#39;, selectListener);
+      controller.addEventListener(&#39;selectstart&#39;, selectListener);
++      controller.addEventListener(&#39;selectend&#39;, endListener);
+
+       ...
+</code></pre>
+<p>Now let&#39;s change the code so when we get a <code class="notranslate" translate="no">selectstart</code> event we&#39;ll
+remove the selected object from the scene and make it a child of the controller.
+This means it will move with the controller. When we get a <code class="notranslate" translate="no">selectend</code>
+event we&#39;ll put it back in the scene.</p>
+<pre class="prettyprint notranslate" translate="no"><code class="lang-js">const pickHelper = new ControllerPickHelper(scene);
+-pickHelper.addEventListener(&#39;select&#39;, (event) =&gt; {
+-  event.selectedObject.visible = false;
+-  const partnerObject = meshToMeshMap.get(event.selectedObject);
+-  partnerObject.visible = true;
+-});
+
++const controllerToSelection = new Map();
++pickHelper.addEventListener(&#39;selectstart&#39;, (event) =&gt; {
++  const {controller, selectedObject} = event;
++  const existingSelection = controllerToSelection.get(controller);
++  if (!existingSelection) {
++    controllerToSelection.set(controller, {
++      object: selectedObject,
++      parent: selectedObject.parent,
++    });
++    controller.attach(selectedObject);
++  }
++});
++
++pickHelper.addEventListener(&#39;selectend&#39;, (event) =&gt; {
++  const {controller} = event;
++  const selection = controllerToSelection.get(controller);
++  if (selection) {
++    controllerToSelection.delete(controller);
++    selection.parent.attach(selection.object);
++  }
++});
+</code></pre>
+<p>When an object is selected we save off that object and its
+original parent. When the user is done we can put the object back.</p>
+<p>We use the <code class="notranslate" translate="no">Object3D.attach</code> to re-parent
+the selected objects. These functions let us change the parent
+of an object without changing its orientation and position in the
+scene. </p>
+<p>And with that we should be able to move the objects around with a 6DOF
+controller or at least change their orientation with a 3DOF controller</p>
+<p><div translate="no" class="threejs_example_container notranslate">
+  <div><iframe class="threejs_example notranslate" translate="no" style=" " src="/threejs/resources/editor.html?url=/threejs/lessons/..%2Fthreejs-webvr-point-to-select-w-move.html"></iframe></div>
+  <a class="threejs_center" href="/threejs/lessons/../threejs-webvr-point-to-select-w-move.html" target="_blank">click here to open in a separate window</a>
+</div>
+
+</p>
+<p>To be honest I&#39;m not 100% sure this <code class="notranslate" translate="no">ControllerPickHelper</code> is
+the best way to organize the code but it&#39;s useful to demonstrating
+the various parts of getting something simple working in VR
+in three.js</p>
+
+    </div>
+    <div class="lesson-sidebar">
+        <select class="language">
+    <option value="/threejs/lessons/threejs-webvr-point-to-select.html" selected>English</a>
+    <option value="/threejs/lessons/fr/threejs-webvr-point-to-select.html" >Français</a>
+    <option value="/threejs/lessons/ja/threejs-webvr-point-to-select.html" >日本語</a>
+    <option value="/threejs/lessons/kr/threejs-webvr-point-to-select.html" >한국어</a>
+    <option value="/threejs/lessons/ru/threejs-webvr-point-to-select.html" >Русский</a>
+    <option value="/threejs/lessons/zh_cn/threejs-webvr-point-to-select.html" >中文</a>
+</select>
+
+
+        <div id="toc">
+          <ul>  <li>Basics</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-fundamentals.html">Fundamentals</a></li>
+<li><a href="/threejs/lessons/threejs-responsive.html">Responsive Design</a></li>
+<li><a href="/threejs/lessons/threejs-prerequisites.html">Prerequisites</a></li>
+<li><a href="/threejs/lessons/threejs-setup.html">Setup</a></li>
+        </ul>
+  <li>Fundamentals</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-primitives.html">Primitives</a></li>
+<li><a href="/threejs/lessons/threejs-scenegraph.html">Scenegraph</a></li>
+<li><a href="/threejs/lessons/threejs-materials.html">Materials</a></li>
+<li><a href="/threejs/lessons/threejs-textures.html">Textures</a></li>
+<li><a href="/threejs/lessons/threejs-lights.html">Lights</a></li>
+<li><a href="/threejs/lessons/threejs-cameras.html">Cameras</a></li>
+<li><a href="/threejs/lessons/threejs-shadows.html">Shadows</a></li>
+<li><a href="/threejs/lessons/threejs-fog.html">Fog</a></li>
+<li><a href="/threejs/lessons/threejs-rendertargets.html">Render Targets</a></li>
+<li><a href="/threejs/lessons/threejs-custom-geometry.html">Custom Geometry</a></li>
+<li><a href="/threejs/lessons/threejs-custom-buffergeometry.html">Custom BufferGeometry</a></li>
+        </ul>
+  <li>Tips</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-rendering-on-demand.html">Rendering On Demand</a></li>
+<li><a href="/threejs/lessons/threejs-debugging-javascript.html">Debugging JavaScript</a></li>
+<li><a href="/threejs/lessons/threejs-debugging-glsl.html">Debugging GLSL</a></li>
+<li><a href="/threejs/lessons/threejs-tips.html#screenshot">Taking a screenshot</a></li>
+<li><a href="/threejs/lessons/threejs-tips.html#preservedrawingbuffer">Prevent the Canvas Being Cleared</a></li>
+<li><a href="/threejs/lessons/threejs-tips.html#tabindex">Get Keyboard Input From a Canvas</a></li>
+<li><a href="/threejs/lessons/threejs-tips.html#transparent-canvas">Make the Canvas Transparent</a></li>
+<li><a href="/threejs/lessons/threejs-tips.html#html-background">Use three.js as Background in HTML</a></li>
+        </ul>
+  <li>Optimization</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-optimize-lots-of-objects.html">Optimizing Lots of Objects</a></li>
+<li><a href="/threejs/lessons/threejs-optimize-lots-of-objects-animated.html">Optimizing Lots of Objects Animated</a></li>
+<li><a href="/threejs/lessons/threejs-offscreencanvas.html">Using OffscreenCanvas in a Web Worker</a></li>
+        </ul>
+  <li>Solutions</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-load-obj.html">Load an .OBJ file</a></li>
+<li><a href="/threejs/lessons/threejs-load-gltf.html">Load a .GLTF file</a></li>
+<li><a href="/threejs/lessons/threejs-backgrounds.html">Add a Background or Skybox</a></li>
+<li><a href="/threejs/lessons/threejs-transparency.html">How to Draw Transparent Objects</a></li>
+<li><a href="/threejs/lessons/threejs-multiple-scenes.html">Multiple Canvases, Multiple Scenes</a></li>
+<li><a href="/threejs/lessons/threejs-picking.html">Picking Objects with the mouse</a></li>
+<li><a href="/threejs/lessons/threejs-post-processing.html">Post Processing</a></li>
+<li><a href="/threejs/lessons/threejs-post-processing-3dlut.html">Applying a LUT File for effects</a></li>
+<li><a href="/threejs/lessons/threejs-shadertoy.html">Using Shadertoy shaders</a></li>
+<li><a href="/threejs/lessons/threejs-align-html-elements-to-3d.html">Aligning HTML Elements to 3D</a></li>
+<li><a href="/threejs/lessons/threejs-indexed-textures.html">Using Indexed Textures for Picking and Color</a></li>
+<li><a href="/threejs/lessons/threejs-canvas-textures.html">Using A Canvas for Dynamic Textures</a></li>
+<li><a href="/threejs/lessons/threejs-billboards.html">Billboards and Facades</a></li>
+<li><a href="/threejs/lessons/threejs-cleanup.html">Freeing Resources</a></li>
+<li><a href="/threejs/lessons/threejs-voxel-geometry.html">Making Voxel Geometry (Minecraft)</a></li>
+<li><a href="/threejs/lessons/threejs-game.html">Start making a Game.</a></li>
+        </ul>
+  <li>WebVR</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-webvr.html">VR - Basics</a></li>
+<li><a href="/threejs/lessons/threejs-webvr-look-to-select.html">VR - Look To Select</a></li>
+<li><a href="/threejs/lessons/threejs-webvr-point-to-select.html">VR - Point To Select</a></li>
+        </ul>
+  <li>Reference</li>
+        <ul>
+          <li><a href="/threejs/lessons/threejs-material-table.html">Material Table</a></li>
+        </ul></ul>
+<ul>
+  <li><a href="https://github.com/gfxfundamentals/threejsfundamentals">github</a></li>
+  <li><a href="https://threejs.org">three.js</a></li>
+  <li><a href="https://threejs.org/docs/">three.js docs</a></li>
+</ul>
+
+        </div>
+    </div>
+    <div class="lesson-comments">
+        
+    <div>Questions? <a href="http://stackoverflow.com/questions/tagged/three.js">Ask on stackoverflow</a>.</div>
+    <div>
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=suggested+topic&template=suggest-topic.md&title=%5BSUGGESTION%5D">Suggestion</a>?
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=&template=request.md&title=">Request</a>?
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=bug+%2F+issue&template=bug-issue-report.md&title=">Issue</a>?
+       <a href="https://github.com/gfxfundamentals/threejsfundamentals/issues/new?assignees=&labels=bug+%2F+issue&template=bug-issue-report.md&title=">Bug</a>?
+    </div>
+    <div class="lesson-comment-notes">
+       Use <b>&lt;pre&gt;&lt;code&gt;</b>code goes here<b>&lt;/code&gt;&lt;/pre&gt;</b> for code blocks
+    </div>
+  
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'threejsfundamentals'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Three.js VR - 3DOF Point to Select';
+            var disqus_title = 'Three.js VR - 3DOF Point to Select';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("threejsfundamentals.org") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+  </div>
+</div>
+</body>
+<script src="/3rdparty/jquery-3.3.1.slim.min.js"></script>
+<script src="/threejs/lessons/resources/prettify.js"></script>
+<script src="/threejs/lessons/resources/lesson.js"></script>
+<script>
+(function() {
+  if (window.location.hostname.indexOf("threejsfundamentals.org") < 0) {
+      return;
+  }
+
+  function addScript(src, fn) {
+    const script = document.createElement('script');
+    const firstScript = document.getElementsByTagName('script')[0];
+    script.async = true;
+    script.defer = true;
+    if (fn) {
+      script.addEventListener('load', fn);
+    }
+    script.src = src;
+    firstScript.parentNode.insertBefore(script, firstScript);
+  }
+
+  addScript('//cdn.webglstats.com/stat.js');
+  addScript('https://www.googletagmanager.com/gtag/js?id=UA-120733518-1', () => {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-120733518-1');
+  });
+}());
+</script>
+
+
+</html>
+
+
+

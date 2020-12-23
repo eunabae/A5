@@ -1,0 +1,32 @@
+[터미널로 들어가기]
+
+1) 
+
+cd C:\Users\dmsdk\Desktop\project1\threejsfundamentals-gh-pages
+
+(실행할 html 파일 있는 경로 입력)
+
+2)
+ 
+http-server -c-1
+
+
+[크롬 실행하기]
+3.
+http://127.0.0.1:8080/proj1-skeleton.html
+
+http://127.0.0.1:8080/proj1.html
+
+
+(위에 입력한 경로에 이어서 실행할 파일 정보(?, 위치?) 입력)
+
+
+페이지 실행 후 
+개발자모드에 들어가서 코드 수정
+
+수정결과는 - html저장 - 새로고침 해야 적용
+
+
+[터미널에서]
+
+ctrl+c = 서버 종료
